@@ -50,28 +50,30 @@ export class PPTXProcessor {
   private static async renderSlideToCanvas(imageBlob: Blob): Promise<{ canvas: HTMLCanvasElement; blob: Blob }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      const objectUrl = URL.createObjectURL(imageBlob);
       img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         if (!ctx) {
           reject(new Error('Could not get canvas context'));
           return;
         }
-        
+
         // Set standard slide dimensions (16:9 aspect ratio)
         canvas.width = 1920;
         canvas.height = 1080;
-        
+
         // Fill with white background
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
         // Draw the image, scaling to fit while maintaining aspect ratio
         const imgAspect = img.width / img.height;
         const canvasAspect = canvas.width / canvas.height;
-        
+
         let drawWidth, drawHeight, drawX, drawY;
-        
+
         if (imgAspect > canvasAspect) {
           // Image is wider than canvas aspect ratio
           drawWidth = canvas.width;
@@ -85,9 +87,9 @@ export class PPTXProcessor {
           drawX = (canvas.width - drawWidth) / 2;
           drawY = 0;
         }
-        
+
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-        
+
         canvas.toBlob((blob) => {
           if (blob) {
             resolve({ canvas, blob });
@@ -96,9 +98,12 @@ export class PPTXProcessor {
           }
         }, 'image/png');
       };
-      
-      img.onerror = () => reject(new Error('Failed to load image'));
-      img.src = URL.createObjectURL(imageBlob);
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error('Failed to load image'));
+      };
+      img.src = objectUrl;
     });
   }
   
