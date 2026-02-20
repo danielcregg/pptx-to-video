@@ -1,215 +1,89 @@
 # PowerPoint to Video Converter
 
-A modern, client-side web application that converts PowerPoint presentations (.pptx) into narrated videos entirely in the browser.
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![FFmpeg](https://img.shields.io/badge/FFmpeg-007808?style=flat-square&logo=ffmpeg&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)
 
-## 🌟 Features
+A modern, fully client-side web application that converts PowerPoint presentations into narrated videos entirely in the browser -- no backend server required.
 
-- **100% Client-Side**: No backend server required - everything runs in your browser
-- **PowerPoint Support**: Upload .pptx files and automatically extract slide images
-- **AI-Powered Scripts**: Generate narration scripts using Google AI Studio
-- **Text-to-Speech**: Convert scripts to audio narration
-- **Video Creation**: Combine slides and audio into MP4 videos using ffmpeg.wasm
-- **Modern UI**: Clean, responsive interface built with React + TypeScript + Tailwind CSS
-- **GitHub Pages Ready**: Deploy as a static site
+## Overview
 
-## 🚀 Live Demo
+Upload a `.pptx` file and the application extracts slide images, generates narration scripts with Google Gemini AI, synthesizes speech using the Web Speech API, and assembles the final MP4 video with ffmpeg.wasm. All processing happens locally in the browser; no files are sent to external servers apart from slide images sent to Google AI for script generation.
 
-Visit the live application: [Your GitHub Pages URL]
+## Features
 
-## 🛠️ Technology Stack
+- **100% client-side processing** -- no backend server needed
+- **Drag-and-drop file upload** for PowerPoint (.pptx) files
+- **AI-powered script generation** via Google Gemini vision models
+- **Browser-native text-to-speech** using the Web Speech API
+- **In-browser video encoding** with ffmpeg.wasm
+- **Guided workflow stepper** (Upload, Scripts, Audio, Video, Download)
+- **Script editing interface** for reviewing and customizing narration
+- **Browser compatibility detection** for SharedArrayBuffer support
+- **GitHub Pages deployment** with automated CI/CD workflow
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Headless UI
-- **State Management**: Zustand
-- **AI Integration**: Google Generative AI (Gemini)
-- **Audio Processing**: Web Speech API / Google Cloud Text-to-Speech
-- **Video Processing**: ffmpeg.wasm
-- **File Processing**: JSZip for .pptx parsing
-- **Deployment**: GitHub Pages
+## Prerequisites
 
-## 📋 Prerequisites
+- Node.js 18 or higher
+- A Google AI Studio API key ([get one here](https://aistudio.google.com/app/apikey))
+- A modern browser with SharedArrayBuffer support (Chrome, Firefox, or Edge)
 
-- Node.js 18+ and npm
-- Google AI Studio API key ([Get one here](https://aistudio.google.com/app/apikey))
+## Getting Started
 
-## 🏃‍♂️ Quick Start
+### Installation
 
-1. **Clone the repository**
+1. Clone the repository:
    ```bash
-   git clone [your-repo-url]
+   git clone https://github.com/danielcregg/pptx-to-video.git
    cd pptx-to-video
    ```
 
-2. **Install dependencies**
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Start development server**
+3. Start the development server:
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:5173`
+4. Open `http://localhost:5173` in your browser.
 
-## 🔧 Setup Instructions
+### Usage
 
-### Google AI API Key
-1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a new API key
-3. Enter the API key in the application when prompted
-4. The key is stored securely in your browser's local storage
+1. **Configure API Key** -- Enter your Google AI Studio API key (stored locally in the browser).
+2. **Upload** -- Drag and drop or select a `.pptx` file.
+3. **Generate Scripts** -- Let Gemini AI analyze each slide and produce narration scripts.
+4. **Edit Scripts** -- Review and customize the generated scripts as needed.
+5. **Generate Audio** -- Convert scripts to speech using the browser's text-to-speech engine.
+6. **Create Video** -- Combine slide images and audio into a final MP4 video.
+7. **Download** -- Save the generated video to your device.
 
-### For Google Cloud Text-to-Speech (Optional)
-If you want to use Google Cloud TTS instead of the browser's Web Speech API:
-1. Enable the Text-to-Speech API in Google Cloud Console
-2. Create a service account and download credentials
-3. Update the TTS service in `src/utils/textToSpeech.ts`
+### Deployment
 
-## 📱 How to Use
+The project includes a GitHub Actions workflow for automatic deployment to GitHub Pages. Push to `main` and the site will be built and deployed automatically.
 
-1. **Upload**: Drag and drop or select a .pptx file
-2. **Configure**: Enter your Google AI Studio API key
-3. **Generate Scripts**: Let AI analyze your slides and create narration scripts
-4. **Edit Scripts**: Review and customize the generated scripts
-5. **Generate Audio**: Convert scripts to speech audio
-6. **Create Video**: Combine slides and audio into a final MP4 video
-7. **Download**: Save your video to your device
-
-## 🚀 Deployment
-
-### GitHub Pages (Recommended)
-
-1. **Update Vite config** (already configured in `vite.config.ts`):
-   ```typescript
-   export default defineConfig({
-     base: '/your-repo-name/',
-     // ... other config
-   });
-   ```
-
-2. **Enable GitHub Pages**:
-   - Go to your repository settings
-   - Navigate to "Pages"
-   - Set source to "GitHub Actions"
-
-3. **Deploy**:
-   ```bash
-   git push origin main
-   ```
-   The GitHub Action will automatically build and deploy your app.
-
-### Alternative Deployment Options
-
-- **Netlify**: Drag and drop the `dist` folder after running `npm run build`
-- **Vercel**: Connect your GitHub repository
-- **Any static host**: Upload the contents of `dist` folder
-
-## 🏗️ Project Structure
-
-```
-src/
-├── components/           # React components
-│   ├── ApiKeyConfig.tsx     # API key configuration
-│   ├── FileUpload.tsx       # File upload with drag & drop
-│   ├── SlideEditor.tsx      # Script editing interface
-│   ├── VideoCreator.tsx     # Video creation & download
-│   └── WorkflowStepper.tsx  # Progress stepper
-├── store/               # State management
-│   └── appStore.ts         # Zustand store
-├── utils/               # Utility functions
-│   ├── pptxProcessor.ts    # PowerPoint file processing
-│   ├── googleAI.ts         # Google AI integration
-│   ├── textToSpeech.ts     # Audio generation
-│   ├── videoProcessor.ts   # Video creation with ffmpeg
-│   └── cn.ts              # Tailwind class utilities
-├── App.tsx              # Main application component
-└── main.tsx            # Application entry point
+For manual deployment:
+```bash
+npm run deploy
 ```
 
-## 🎨 Customization
+## Tech Stack
 
-### Styling
-- Modify `tailwind.config.js` for custom themes
-- Update component styles in individual `.tsx` files
-- Add custom CSS in `src/index.css`
+- **React 19** -- UI component framework
+- **TypeScript** -- Type-safe JavaScript
+- **Vite** -- Fast build tooling and development server
+- **Tailwind CSS** -- Utility-first CSS framework
+- **Zustand** -- Lightweight state management
+- **Google Generative AI (Gemini)** -- AI vision model for slide script generation
+- **ffmpeg.wasm** -- Browser-based video encoding
+- **JSZip** -- Client-side .pptx file parsing
+- **Web Speech API** -- Browser-native text-to-speech synthesis
+- **Headless UI** -- Accessible unstyled UI components
 
-### Video Settings
-Customize video parameters in `src/utils/videoProcessor.ts`:
-- Resolution (default: 1920x1080)
-- Frame rate
-- Audio quality
-- Slide duration
+## License
 
-### AI Prompts
-Modify the script generation prompt in `src/utils/googleAI.ts` to customize the narration style.
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **FFmpeg Loading Errors ("failed to import ffmpeg-core.js")**
-   - **Cause**: Missing SharedArrayBuffer support or incorrect CORS headers
-   - **Solutions**:
-     - Ensure you're serving the app over HTTPS (required for SharedArrayBuffer)
-     - Add these headers to your server:
-       ```
-       Cross-Origin-Embedder-Policy: require-corp
-       Cross-Origin-Opener-Policy: same-origin
-       Cross-Origin-Resource-Policy: cross-origin
-       ```
-     - For GitHub Pages: The headers are automatically set correctly
-     - For local development: Use `npm run dev` which sets the headers automatically
-     - Try a different browser (Chrome, Firefox, Safari recommended)
-
-2. **CORS Errors with ffmpeg.wasm**
-   - Ensure proper headers are set in `vite.config.ts`
-   - The app needs to be served over HTTPS in production
-
-3. **Large File Processing**
-   - ffmpeg.wasm has memory limitations
-   - Consider reducing image quality or slide count for very large presentations
-
-4. **API Key Issues**
-   - Verify your Google AI API key is valid
-   - Check browser console for specific error messages
-
-5. **Audio Generation Problems**
-   - Some browsers have limitations with Web Speech API
-   - Consider implementing Google Cloud TTS for better reliability
-
-6. **SharedArrayBuffer Not Available**
-   - This is required for video processing
-   - Ensure your site meets [SharedArrayBuffer requirements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements)
-   - Use HTTPS and set proper security headers
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) for browser-based video processing
-- [Google AI](https://ai.google.dev/) for script generation
-- [React](https://reactjs.org/) and [Vite](https://vitejs.dev/) for the development experience
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-- Open an issue on GitHub
-- Check the troubleshooting section above
-- Review the browser console for error messages
-
----
-
-**Note**: This application processes all data locally in your browser. No files or data are sent to external servers except for the AI script generation (which only sends slide images to Google AI) and optional Google Cloud TTS API calls.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
